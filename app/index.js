@@ -11,6 +11,7 @@ import Component5 from './components/Component5';
 import Component6 from './components/Component6';
 import Component7 from './components/Component7';
 import Component8 from './components/Component8';
+import Component9 from './components/Component9';
 
 
 ReactDom.render(
@@ -26,6 +27,7 @@ ReactDom.render(
         <Component6 /> {/*Click事件  获取真实的DOM节点*/}
         <Component7 /> {/*State的用法，以toggel显示文字为例*/}
         <Component8 /> {/*onChange事件，以及变量值的同步*/}
+        <Component9 /> {/*定时任务事件的嵌入*/}
     </div>,
     document.getElementById('app')
 );

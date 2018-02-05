@@ -47,7 +47,7 @@ class Component8 extends React.Component {
         return(
             <div>
                 <h3>八、</h3>
-                <input type="text" value={value} onChange={this.handleChange.bind(this)} />
+                <input type="text" value={value} onChange={this.handleChange.bind(this)} style={{border:'1px solid #000'}} />
                 <p>
                     {value}
                 </p>
