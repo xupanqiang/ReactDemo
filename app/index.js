@@ -10,6 +10,7 @@ import Component4 from './components/Component4';
 import Component5 from './components/Component5';
 import Component6 from './components/Component6';
 import Component7 from './components/Component7';
+import Component8 from './components/Component8';
 
 
 ReactDom.render(
@@ -24,6 +25,7 @@ ReactDom.render(
         <Component5 title="123" /> {/*PropTypes    组件的属性可以接受任意值，字符串、对象、函数等等都可以。有时，我们需要一种机制，验证别人使用组件时，提供的参数是否符合要求。*/}
         <Component6 /> {/*Click事件  获取真实的DOM节点*/}
         <Component7 /> {/*State的用法，以toggel显示文字为例*/}
+        <Component8 /> {/*onChange事件，以及变量值的同步*/}
     </div>,
     document.getElementById('app')
 );
