@@ -73,6 +73,7 @@ class Component6 extends React.Component {
         };
         return (
             <div>
+                <h3>六、</h3>
                 <input type="text" ref="tt" style={{border:'1px solid #000'}}/>
                 <input type="button" value="Focus the text input" onClick={handleClick} style={{border:'1px solid #000'}}/>
             </div>

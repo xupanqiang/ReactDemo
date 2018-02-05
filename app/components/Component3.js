@@ -61,6 +61,7 @@ class Component3 extends React.Component {
         const names = ['Alice', 'Emily', 'Kate'];
         return (
             <div>
+                <h3>三、</h3>
                 {
                     names.map(function (name) {
                         return <div key={name}>Hello, {name}!</div>

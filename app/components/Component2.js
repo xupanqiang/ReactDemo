@@ -57,6 +57,7 @@ class Component2 extends React.Component {
     render() {
         return (
             <div>
+                <h3>二、</h3>
                 <h1>{this.props.title}</h1>
             </div>
         )

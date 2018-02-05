@@ -76,6 +76,7 @@ class Component4 extends React.Component {
     render() {
         return (
             <div>
+                <h3>四、</h3>
                 <ol>
                     {
                         React.Children.map(this.props.children, function (child) {

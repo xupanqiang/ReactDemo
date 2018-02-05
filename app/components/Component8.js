@@ -46,6 +46,7 @@ class Component8 extends React.Component {
         const value= this.state.value;
         return(
             <div>
+                <h3>八、</h3>
                 <input type="text" value={value} onChange={this.handleChange.bind(this)} />
                 <p>
                     {value}

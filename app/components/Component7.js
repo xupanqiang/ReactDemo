@@ -85,6 +85,7 @@ class Component7 extends React.Component{
         const text = this.state.like?'Like':"Unlike";
         return(
             <div>
+                <h3>七、</h3>
                 <p onClick={this.handleClick.bind(this)}>
                     You {text} this.Click the toggle;
                 </p>
