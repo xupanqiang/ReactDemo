@@ -1,303 +1,178 @@
-#前言 随着前端代码越来越多，越来越复杂，整个工程变得越来越难以管理。所以，前端工程化已是必然的趋势，已经是2016年了，还在用手动添加依赖吗？快来学习用构建工具来管理web项目吧。
-就像是Android工程使用gradle来进行项目构建一样，在前端世界里，现在最流行的工具就是webpack。
-而现在最流行的前端框架，分别是Google的Angular.js，Facebook的React.js，还有我们国人自己的尤雨溪大神的Vue.js。因为最近Angular和Vue发布了2.0版本，区别较大，所以推荐学习更为稳定的React.js。
-自己是阅读了以下两篇文章：
-入门Webpack，看这篇就够了 React+Webpack快速上手指南
-两篇文章写的非常好，但中间还是有些地方不是很清楚，需要结合起来看，所以写下这篇文章，总结自己实际开发中遇到的坑。乐于分享，收获更多。
-#开发环境 推荐使用JetBrain的Webstorm，有强大的代码提示，支持JSX和ES6语法；可以试用一个月，相对于开发效率的巨大提升，一年300块真的不算太贵。
-我们将会使用npm来下载和构建依赖，需要提前安装node.js，如果没有安装可以参考这篇文章安装node.js和npm
-使用npm时需要将终端定位到项目的根目录下
-React作为Facebook全家桶的老大哥，今后肯定会使用Facebook新出的开源依赖工具Yarn，推荐好奇的同学们去试（cai）试（keng）。我们还是先使用稳定的npm，毕竟依赖工具只是辅助，以后可以迁移到yarn上，重要的是代码。
-源码地址：https://github.com/BadWaka/ReactDemo_webpack 如果觉得有帮助，点个star呗
-让我们开始吧
-#项目结构 新建一个新项目，命名为ReactDemo，将项目目录组织如下：
-* 其中app是开发目录
-    * components用来放React的组件
-        * Component1.jsx是React特有的jsx文件
-    * main.js是入口文件，用来将React组件放在真正的Html中
-* build是输出目录
-    * index.html是最终要呈现的页面文件，代码如下
-<!DOCTYPE html>
-<title>ReactDemo1</title>
-<script src="bundle.js"></script> ``` - bundle.js是app文件夹下的文件经webpack打包后最终生成的供浏览器解析的js文件，这个不需要手动进行配置，甚至你不需要新建它，由webpack自动生成。
-#创建package.json文件 package.json是一个标准的npm说明文件，里面蕴含了丰富的信息，包括当前项目的依赖模块，自定义的脚本任务等；
-在工程根目录打开命令行（win10中使用ctrl+shift+右键可以在菜单中看到"在此处打开命令窗口"的选项），输入npm init可以自动创建package.json文件；
-输入命令后，终端会问用户一系列的问题，如果不需要在npm中发布你的模块，一路回车默认即可（注意：name需要小写）；
-确认后输入yes即可看到package.json文件创建完成
-#安装webpack
-//全局安装webpack，优点是打包时可以直接输webpack命令
-npm install -g webpack
+## react-tutorial
+a tutorial react collection and sort,let you easily get started and organized
 
-//在本项目中安装webpack，--save-dev的意思是将依赖写入项目的package.json文件
-npm install --save-dev webpack
-在命令行中输入npm install --save-dev webpack，在本项目中安装webpack作为依赖包
-如上图所示则代表安装成功
-#创建webpack.config.js
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-Webpack拥有很多其它的比较高级的功能（比如说本文后面会介绍的loaders和plugins），这些功能其实都可以通过命令行模式实现，但是正如已经提到的，这样不太方便且容易出错的，一个更好的办法是定义一个配置文件，这个配置文件其实也是一个简单的JavaScript模块，可以把所有的与构建相关的信息放在里面。
-webpack.config.js是webpack的配置文件 在项目的根目录下新建一个webpack.config.js的文件，代码如下：
-//__dirname是node.js中的一个全局变量，它指向当前执行脚本所在的目录
-module.exports = {//注意这里是exports不是export
-    entry: __dirname + "/app/main.js",//唯一入口文件，就像Java中的main方法
-    output: {//输出目录
-        path: __dirname + "/build",//打包后的js文件存放的地方
-        filename: "bundle.js"//打包后的js文件名
-    }
-};
-这时候已经可以使用webpack进行打包了 在命令行下输入webpack(非全局安装需使用node_modules/.bin/webpack
-看到以上提示说明打包成功了，可以看到build目录下的bundle.js里多了很多自动生成的代码，但预览index.html却什么都没有看到，这是因为还没有往页面中写入内容。
-#更方便的执行打包任务
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-执行类似于node_modules/.bin/webpack这样的命令其实是比较烦人且容易出错的，不过值得庆幸的是npm可以引导任务执行，对其进行配置后可以使用简单的npm start命令来代替这些繁琐的命令。在package.json中对npm的脚本部分进行相关设置即可，设置方法如下。
-//package.json
-{
-  "name": "react_demo1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {//默认的test直接删除即可
-    "start": "webpack"//配置的地方就是这里，相当于把npm的start命令指向webpack命令；注意：实际代码中这里不能加注释，否则会报错
-  },
-  "author": "waka",
-  "license": "ISC",
-  "devDependencies": {
-    "webpack": "^1.13.2"
-  }
-}
-**注：**package.json中的脚本部分已经默认在命令前添加了node_modules/.bin 路径，所以无论是全局还是局部安装的Webpack，你都不需要写前面那指明详细的路径了。
-npm的start是一个特殊的脚本名称，它的特殊性表现在，在命令行中使用npm start就可以执行相关命令，如果对应的此脚本名称不是start，想要在命令行中运行时，需要这样用npm run {script name}如npm run build，以下是执行npm start后命令行的输出显示：
-以后直接输入npm start就可以进行打包操作了
-#使用Source Maps，使调试更容易
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-开发总是离不开调试，如果可以更加方便的调试当然就能提高开发效率，不过打包后的文件有时候你是不容易找到出错了的地方对应的源代码的位置的，Source Maps就是来帮我们解决这个问题的。 通过简单的配置后，Webpack在打包时可以为我们生成的source maps，这为我们提供了一种对应编译文件和源文件的方法，使得编译后的代码可读性更高，也更容易调试。
-在webpack的配置文件中配置source maps，需要配置devtool，它有以下四种不同的配置选项，各具优缺点，描述如下：
-devtool选项
-配置结果
-source-map 
-在一个单独的文件中产生一个完整且功能完全的文件。这个文件具有最好的source map，但是它会减慢打包文件的构建速度 
-cheap-module-source-map 
-在一个单独的文件中生成一个不带列映射的map，不带列映射提高项目构建速度，但是也使得浏览器开发者工具只能对应到具体的行，不能对应到具体的列（符号），会对调试造成不便 
-eval-source-map 
-使用eval打包源文件模块，在同一个文件中生成干净的完整的source map。这个选项可以在不影响构建速度的前提下生成完整的sourcemap，但是对打包后输出的JS文件的执行具有性能和安全的隐患。不过在开发阶段这是一个非常好的选项，但是在生产阶段一定不要用这个选项 
-cheap-module-eval-source-map 
-这是在打包文件时最快的生成source map的方法，生成的Source Map 会和打包后的JavaScript文件同行显示，没有列映射，和eval-source-map选项具有相似的缺点 
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-正如上表所述，上述选项由上到下打包速度越来越快，不过同时也具有越来越多的负面作用，较快的构建速度的后果就是对打包后的文件的的执行有一定影响。
-在学习阶段以及在小到中性的项目上，eval-source-map是一个很好的选项，不过记得只在开发阶段使用它，继续上面的例子，进行如下配置
-//webpack.config.js
-module.exports = {
-    devtool: 'eval-source-map',//生成Source Maps,这里选择eval-source-map
-    entry:  __dirname + '/app/main.js',//唯一入口文件,__dirname是node.js中的一个全局变量，它指向当前执行脚本所在的目录
-    output: {//输出目录
-        path: __dirname + '/build',//打包后的js文件存放的地方
-        filename: 'bundle.js'//打包后输出的js的文件名
-    }
-};
-#安装React 在终端输入npm install --save-dev react react-dom同时安装React和React-DOM
-标准的React组件后缀名为.jsx，而.jsx是默认不被浏览器所支持的；所以需要一个转换器，将不被浏览器识别的.jsx文件转换成浏览器能够正常运行的文件，这个转换器就是Babel
-#安装和配置Babel
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-Babel其实是一个编译JavaScript的平台，它的强大之处表现在可以通过编译帮你达到以下目的：
-* 下一代的JavaScript标准（ES6，ES7），这些标准目前并未被当前的浏览器完全的支持；
-* 使用基于JavaScript进行了拓展的语言，比如React的JSX
-Babel其实是几个模块化的包，其核心功能位于称为babel-core的npm包中，不过webpack把它们整合在一起使用，但是对于每一个你需要的功能或拓展，你都需要安装单独的包（用得最多的是解析Es6的babel-preset-es2015包和解析JSX的babel-preset-react包）。
-用npm一次性安装这些依赖包npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react
-Babel其实可以完全在webpack.config.js中进行配置
-但是考虑到babel具有非常多的配置选项，在单一的webpack.config.js文件中进行配置往往使得这个文件显得太复杂，因此一些开发者支持把babel的配置选项放在一个单独的名为 ".babelrc" 的配置文件中。
-我们现在的babel的配置并不算复杂，不过之后我们会再加一些东西，因此现在我们就提取出相关部分，分两个配置文件进行配置（webpack会自动调用.babelrc里的babel配置选项），如下：
-在webpack.config.js中
-//webpack.config.js
-module.exports = {
-    devtool: 'eval-source-map',//生成Source Maps,这里选择eval-source-map
-    entry: __dirname + "/app/main.js",//唯一入口文件
-    output: {//输出目录
-        path: __dirname + "/build",//打包后的js文件存放的地方
-        filename: "bundle.js"//打包后输出的js的文件名
-    },
+主要是搜集整理`react`生态从入门到深入的教程、工具和自己做的demo,以便日后查阅 :blush: 包括<a href="#web">web端</a>和移动端(<a href="https://github.com/cllgeek/react-tutorial/blob/master/RN.md">`react-native`</a>)
 
-    module: {
-        //loaders加载器
-        loaders: [
-            {
-                test: /\.(js|jsx)$/,//一个匹配loaders所处理的文件的拓展名的正则表达式，这里用来匹配js和jsx文件（必须）
-                exclude: /node_modules/,//屏蔽不需要处理的文件（文件夹）（可选）
-                loader: 'babel'//loader的名称（必须）
-            }
-        ]
-    }
-};
-在项目根目录下新建.babelrc文件，没错你没看错，就是只有后缀名的文件，添加如下代码：
-//.babelrc
-{
-  "presets": [
-    "react",
-    "es2015"
-  ]
-}
-这时已将babel配置完成，可以使用JSX和ES6的语法了。
-#使用ES6书写React组件 在app->components目录下新建一个Component.jsx文件（注意首字母一定要大写），使用ES6语法返回一个React组件，代码如下：
-//Component1.jsx
-import React from 'react';
+<h2 name="web">一、react-web端</h2>
 
-class Component1 extends React.Component {
-    render() {
-        return (
-            <div>Hello World!</div>
-        )
-    }
-}
+### 设计思想
 
-//导出组件
-export default Component1;
-在main.js中使用ES6的语法，定义和渲染Component1模块，将React组件渲染至html的标签中：
-//main.js
-import React from 'react';
-import ReactDom from 'react-dom';
-import Component1 from './components/Component1.jsx';
+学习React之前，我们先了解一下它的设计思想，它与如今其他热门的前端框架有什么不同？它能为我们的开发解决哪些痛点？
 
-ReactDom.render(
-    <Component1 />,
-    document.getElementById('content')
-);
-如果你使用的是webstorm，可能会报这个错Import declarations are not supported by current JavaScript version
-解决的方法是File->Settings->Languages&Frameworks->JavaScript，将JavaScript language version改为ECMAScript6
-也可能会报这个错Switch language level to JSX Harmony
-在弹出栏，点击switch即可
-这样，我们已经将React组件渲染至Html之中了，使用npm start命令重新打包，打包完成后在webstorm中预览index.html文件，即可看到Hello World！
-每次修改完代码，都需要重新打包才能看到变化吗？ Facebook的前端大神们怎么可能会容忍每次都手动打包呢？
-我们可以使用webpack-dev-server来搭建本地开发服务器，修改代码后，立即可以看到变化；所见即所得，大大增加开发效率。
-#安装并启用webpack-dev-server
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-想不想让你的浏览器监测你都代码的修改，并自动刷新修改后的结果，其实Webpack提供一个可选的本地开发服务器，这个本地服务器基于node.js构建，可以实现你想要的这些功能，不过它是一个单独的组件，在webpack中进行配置之前需要单独安装它作为项目依赖
-在终端输入，安装webpack-dev-server
-npm install --save-dev webpack-dev-server
-在webpack.config.js中配置webpack-dev-server，在这里需要修改下entry的路径，给它加一个webpack/hot/dev-server，这里会用到Hot Module Replacement（热替换）插件，所以需要增加这个前缀，后文会提到，代码如下：
-//webpack.config.js
-module.exports = {
-    devtool: 'eval-source-map',//生成Source Maps,这里选择eval-source-map
-    entry: ['webpack/hot/dev-server', __dirname + '/app/main.js'],//唯一入口文件,__dirname是node.js中的一个全局变量，它指向当前执行脚本所在的目录
-    output: {//输出目录
-        path: __dirname + '/build',//打包后的js文件存放的地方
-        filename: 'bundle.js'//打包后输出的js的文件名
-    },
+>1. [React 设计思想](https://github.com/react-guide/react-basic)
+2. [React的设计哲学 - 简单之美](http://www.infoq.com/cn/articles/react-art-of-simplity/) 
+3. [颠覆式前端UI开发框架:React](http://www.infoq.com/cn/articles/subversion-front-end-ui-development-framework-react/)
 
-    module: {
-        //loaders加载器
-        loaders: [
-            {
-                test: /\.(js|jsx)$/,//一个匹配loaders所处理的文件的拓展名的正则表达式，这里用来匹配js和jsx文件（必须）
-                exclude: /node_modules/,//屏蔽不需要处理的文件（文件夹）（可选）
-                loader: 'babel'//loader的名称（必须）
-            }
-        ]
-    },
+---
 
-    //webpack-dev-server配置
-    devServer: {
-        contentBase: './build',//默认webpack-dev-server会为根文件夹提供本地服务器，如果想为另外一个目录下的文件提供本地服务器，应该在这里设置其所在目录（本例设置到"build"目录）
-        colors: true,//在cmd终端中输出彩色日志
-        historyApiFallback: true,//在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
-        inline: true,//设置为true，当源文件改变时会自动刷新页面
-        port: 8080,//设置默认监听端口，如果省略，默认为"8080"
-        process: true,//显示合并代码进度
-    }
-};
-在package.json中配置启动webpack-dev-server的命令
-//package.json，注意：在实际使用过程中package.json不能有任何注释
-{
-  ...
-  "scripts": {
-    "start": "webpack",
-    "dev":"webpack-dev-server"
-  },
-  ...
-}
-这时，我们可以启动webpack-dev-server服务器，看看是否能够实时预览 在终端里输入
-npm run dev
-如果终端输出一大堆日志后，提示webpack: bundle is now VALID则代表本地服务器启动成功，如果需要停止服务，在终端按ctrl+c，按提示输入Y即可（如果不行多按几次...）
-在浏览器中输入http://localhost:8080，可以看到，打开了一个空页面，并没有显示Hello World；按F12打开控制台，可以清除地看到错误提示：Uncaught Error: [HMR] Hot Module Replacement is disabled
-所以我们来安装和配置这个Hot Module Replacement。
-#Hot Module Replacement
-文／zhangwang（简书作者） 原文链接：http://www.jianshu.com/p/42e11515c10f
-Hot Module Replacement（HMR）是webpack里很有用的一个插件，它允许你在修改组件代码后，自动刷新实时预览修改后的效果。 在webpack中实现HMR也很简单，只需要做两项配置
-1. 在webpack配置文件中添加HMR插件；
-2. 在Webpack Dev Server中添加“hot”参数；
-不过配置完这些后，JS模块其实还是不能自动热加载的，还需要在你的JS模块中执行一个Webpack提供的API才能实现热加载，虽然这个API不难使用，但是如果是React模块，使用我们已经熟悉的Babel可以更方便的实现功能热加载。
-整理下我们的思路，具体实现方法如下
-* Babel和webpack是独立的工具
-* 二者可以一起工作
-* 二者都可以通过插件拓展功能
-* HMR是一个webpack插件，它让你能浏览器中实时观察模块修改后的效果，但是如果你想让它工作，需要对模块进行额外的配额；
-* Babel有一个叫做react-transform-hrm的插件，可以在不对React模块进行额外的配置的前提下让HMR正常工作；
-在webpack.config.js中配置如下：
-//webpack.config.js
-var webpack = require('webpack');//引入Webpack模块供我们调用，这里只能使用ES5语法，使用ES6语法会报错
+### 初学者入门
 
-module.exports = {
-    devtool: 'eval-source-map',
-    entry: ['webpack/hot/dev-server', __dirname + '/app/main.js'],
-    output: {
-        path: __dirname + '/build',
-        filename: 'bundle.js'
-    },
+#### 文章
 
-    module: {
-        loaders: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                loader: 'babel'
-            }
-        ]
-    },
+可以结合一些简单demo去看文章，例如你在看阮一峰的React 入门实例教程时，可结合他写的入门demo，或官方给的demo。当然你也要边学习边自己去写一些简单demo，去改改别人写的一些React 项目。一定要多动手。
 
-    plugins: [
-        new webpack.HotModuleReplacementPlugin()//热模块替换插件
-    ],
+>1. [React 入门实例教程-阮一峰](http://www.ruanyifeng.com/blog/2015/03/react.html)：建议先看demo
+2. [一看就懂的ReactJs入门教程（精华版）](http://www.cocoachina.com/webapp/20150721/12692.html)
+3. [React 教程-菜鸟教程](http://www.runoob.com/react/react-tutorial.html)：安装那节好像有点错
+4. [React 入门，5个常用DEMO展示](http://blog.csdn.net/iambinger/article/details/51803606)
+5. [如何学习React](http://www.360doc.com/content/16/0129/07/13518188_531384175.shtml)
+6. [给新手的 React&Webpack 上手教程](https://github.com/theJian/build-a-hn-front-page)
+7. [ReactJS 傻瓜教程](https://zhuanlan.zhihu.com/p/19896745?columnSlug=FrontendMagazine)
+8. [React 最简单的入门应用项目](http://guodavid.tk/2016/08/29/React-Message-board/)
+9. [为你定制的 React 学习路线](http://geek.csdn.net/news/detail/88222)
 
-    devServer: {
-        contentBase: './build',
-        colors: true,
-        historyApiFallback: true,
-        inline: true,
-        port: 8080,
-        process: true
-    }
-};
-其实，这时候已经可以正常工作了；在终端输入npm run dev，待命令行提示webpack: bundle is now VALID后，在浏览器中输入http://localhost:8080，可以看到，正常显示Hello World
-在webstorm中更改React返回的内容，ctrl+s即可看到浏览器页面同步刷新，所见即所得
-如果觉得这样不放心，让我们谨遵医嘱，进行如下额外配置
-安装react-transform-hmr，在不对React模块进行额外的配置的前提下让HMR正常工作
-npm install --save-dev babel-plugin-react-transform react-transform-hmr
-在.babelrc文件里配置babel，注意这里有一堆括号，别写错了
-//.babelrc
-{
-  "presets": [
-    "react",
-    "es2015"
-  ],
-  "env": {
-    "development": {
-      "plugins": [
-        [
-          "react-transform",
-          {
-            "transforms": [
-              {
-                "transform": "react-transform-hmr",
-                "imports": [
-                  "react"
-                ],
-                "locals": [
-                  "module"
-                ]
-              }
-            ]
-          }
-        ]
-      ]
-    }
-  }
-}
-至此，已经用webpack构建好了React项目的基础依赖，可以愉快的开发React程序了。
-Thank you.
+---
+
+#### 入门 demo
+
+>1. [官方入门 demo](https://github.com/facebook/react/tree/master/examples)：可结合官方的入门文档
+2. [入门 demo-阮一峰](https://github.com/ruanyf/react-demos)：结合入门文章
+3. [模仿知乎界面的一个简单React demo](https://github.com/tsrot/react-zhihu)：结合 [ReactJS中文基础视频教程-爱酷](http://www.icoolxue.com/album/show/262)
+
+---
+
+#### 入门视频教程
+
+一定要边看边写，不要囫囵吞枣的看一遍就好了。
+
+>1. [React入门-慕课网](http://www.imooc.com/learn/504)
+2. [ReactJS中文基础视频教程-爱酷](http://www.icoolxue.com/album/show/262)
+3. [ReactJS中文视频教程](http://react-china.org/t/reactjs/584)
+4. [React教程- 汇智网](http://www.hubwiz.com/course/552762019964049d1872fc88/?ch=alloyteam)
+
+---
+
+#### 入门实战视频
+
+了解React开发流程，作者的编码思路，写作规范。
+
+>1. [React实战--打造画廊应用（上）](http://www.imooc.com/learn/507)
+2. [React实战--打造画廊应用（下）](http://www.imooc.com/learn/652)
+3. [ReactJS中文基础视频教程](http://zexeo.com/course/56753a22b2b8de861c0d281a)
+4. [构建实时聊天应用](http://zexeo.com/course/5672c2bd52b470c02bc28b6c)
+
+---
+
+### 开发文档
+
+开发其实不用详细去全看，在你做项目时，遇到不懂的就去查看一下文档，我认为这样效率更高一点。当然你有时间也可以一步步去阅读。
+
+1. [官方文档](https://facebook.github.io/react/docs/hello-world.html)
+2. [中文文档](http://reactjs.cn/react/docs/getting-started-zh-CN.html)
+
+### 学习网站
+
+在学习中我们会遇到 一些问题，可以去社区或一些网站寻找答案，下面推荐一些好的React 社区和学习网站。
+
+>1. [React中文社区](http://react-china.org/)
+2. [React 中文索引](http://nav.react-china.org/)
+2. [React知识库](http://lib.csdn.net/base/react)
+3. [A quick start to React](https://codepicnic.com/posts/a-quick-start-to-react-0777d5c17d4066b82ab86dff8a46af6f)
+4. [stack overflow](http://stackoverflow.com/questions/tagged/reactjs)
+5. [知乎 React 话题](https://www.zhihu.com/topic/20013159/hot)
+6. [segmentfault React 话题](https://segmentfault.com/t/react.js)
+
+---
+
+### React技术栈
+
+React是一款非常优秀的前端框架，你要发挥它完全的性能，你就要结合其他一些技术，例如webpack、redux、react-router等。
+
+>1. [React 技术栈系列教程](http://www.ruanyifeng.com/blog/2016/09/react-technology-stack.html)
+2. [百度母婴技术团队—基于Reactjs实现webapp](https://github.com/my-fe/wiki/issues/1)
+3. [Building a React Universal Blog App](https://www.sitepoint.com/building-a-react-universal-blog-app-a-step-by-step-guide/)
+4. [React为啥非得使用immutable.js](http://react-china.org/t/react-immutable-js/3770)
+5. [React Server Side Rendering 解决 SPA 应用的 SEO 问题](https://blog.coding.net/blog/React-Server-Side-Rendering-for-SPA-SEO)
+6. [webpack官方文档](http://webpack.github.io/docs/)
+7. [Webpack 中文指南](http://webpackdoc.com/)
+8. [webpack一小时快速入门](http://www.w2bc.com/Article/50764)
+9. [使用webpack轻松构建你的第一个react开发框架](http://www.jianshu.com/p/c8a805145046)
+10. [入门Webpack，看这篇就够了](http://www.jianshu.com/p/42e11515c10f#):写的很不错，逐级深入，适合入门，有点长，耐心看完
+10. [react-router](https://github.com/ReactTraining/react-router)
+11. [React Router 中文文档](https://react-guide.github.io/react-router-cn/)
+12. [React Router 官方 demo](https://github.com/reactjs/react-router-tutorial/tree/master/lessons)
+13. [Redux官网](http://redux.js.org/)
+14. [Redux 中文文档](http://cn.redux.js.org/index.html)
+15. [Redux 官方 demo](https://github.com/reactjs/redux/tree/master/examples)
+16. [Redux 莞式教程](https://github.com/kenberkeley/redux-simple-tutorial)
+17. [Redux 视频教程](https://egghead.io/courses/getting-started-with-redux)
+18. [redux 大法好](http://qiutc.me/post/redux-%E5%A4%A7%E6%B3%95%E5%A5%BD-%E2%80%94%E2%80%94-%E5%85%A5%E9%97%A8%E5%AE%9E%E4%BE%8B-TodoList.html)
+19. [Flux 傻瓜教程](https://zhuanlan.zhihu.com/p/19900243?columnSlug=FrontendMagazine)
+20. [react+redux渲染性能优化原理](http://foio.github.io/react-redux-performance-boost/)
+21. [React开发社区](https://react.ctolib.com/)
+22. [用mobx代替redux](https://www.geekjc.com/post/5a044533d0a2f936e03a623a)
+
+---
+
+### 相关好文:
+>1. [React初体验](http://hustlzp.com/post/2016/03/react-first-blood)
+2. [React 最佳实践——那些 React 没告诉你但很重要的事](http://www.v2ex.com/t/274697)
+3. [Redux 状态管理方法与实例](https://segmentfault.com/a/1190000005933397)
+4. [高质量的 React 相关文档和翻译](https://github.com/react-guide)
+5. [redux观点](https://github.com/lawrencebla/redux-review)
+6. [还在纠结 Flux 或 Relay，或许 Redux 更适合你](https://segmentfault.com/a/1190000003099895)
+7. [react,react-router 4,mobx构建我的移动端web](http://www.jianshu.com/p/3d3ed3e0626d)
+
+---
+
+### 相关工具:
+>1. [react-babel-webpack-boilerplate](https://github.com/ruanyf/react-babel-webpack-boilerplate)
+2. [react-webpack-generators](https://github.com/react-webpack-generators/generator-react-webpack)
+3. [React项目可视化生成器](http://www.overreact.io/)
+4. [react-starter-kit](https://github.com/bodyno/react-starter-kit)
+
+---
+
+### 规范
+>1. [react-style-guide](https://github.com/JasonBoy/javascript/tree/master/react)
+
+---
+
+
+### React 开源项目
+
+介绍一些国内外比较好的 React 开源项目。
+
+国内：
+- [阿里的 React 组件库](https://github.com/react-component)
+- [Ant Design](https://github.com/ant-design/ant-design)
+- [简易留言板](https://github.com/tsrot/react-demo)
+- [react-zhihu](https://github.com/tsrot/react-zhihu)
+- [React的扫雷游戏](https://github.com/cjohansen/react-sweeper)
+- [在线聊天室](https://github.com/redsx/CR)
+- [使用React技术栈开发SPA](https://github.com/JasonBai007/reactSPA)
+- [阔论留言评论](https://github.com/NumerHero/kuolun)
+- [React版cnode社区](https://github.com/lzxb/react-cnode)
+
+国外：
+- [Relax](https://github.com/relax/relax)
+- [SoundRedux](https://github.com/andrewngu/sound-redux/)
+- [Gatsby](https://github.com/gatsbyjs/gatsby)
+- [isomorphic500](https://github.com/gpbl/isomorphic500)
+- [NuclearMail](https://github.com/ianobermiller/nuclearmail)
+- [Picard](https://github.com/Automattic/Picard)
+- [React Color](https://github.com/casesandberg/react-color)
+- [Sentry](https://github.com/getsentry/sentry/)
+- [react-hn](https://github.com/insin/react-hn)
+- [Perseus](https://github.com/khan/perseus)
+
+### 自己练习做的项目
+>1. [gallery-by-react](https://cllgeek.github.io/gallery-by-react) 地址:[https://github.com/cllgeek/gallery-by-react](https://github.com/cllgeek/gallery-by-react)
+2. [react-router-tutorial](https://github.com/reactjs/react-router-tutorial)
+3. [redux-tutorial](https://github.com/react-guide/redux-tutorial-cn)
+4. [cll's blog](https://cllgeek.github.io/)
+5. [极客教程网](https://www.geekjc.com)
+6. [极客教程移动版](http://m.geekjc.com)
+---
+
+---
