@@ -61,7 +61,7 @@ class Component9 extends React.Component {
 
         return(
             <div>
-                <h3>八、</h3>
+                <h3>九、</h3>
                 <div style={{ opacity:this.state.opacity }}>Hello, {this.props.name}!</div>
             </div>
         )

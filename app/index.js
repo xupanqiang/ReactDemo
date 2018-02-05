@@ -12,6 +12,7 @@ import Component6 from './components/Component6';
 import Component7 from './components/Component7';
 import Component8 from './components/Component8';
 import Component9 from './components/Component9';
+import Component10 from './components/Component10';
 
 
 ReactDom.render(
@@ -28,6 +29,7 @@ ReactDom.render(
         <Component7 /> {/*State的用法，以toggel显示文字为例*/}
         <Component8 /> {/*onChange事件，以及变量值的同步*/}
         <Component9 /> {/*定时任务事件的嵌入*/}
+        {/*<Component10 source="https://api.github.com/users/octocat/gists"  /> /!*定时任务事件的嵌入*!/*/}
     </div>,
     document.getElementById('app')
 );
