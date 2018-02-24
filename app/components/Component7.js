@@ -79,7 +79,7 @@ class Component7 extends React.Component{
         }
     }
     handleClick(){
-        this.setState({like:!this.state.like});
+        this.setState({like:!this.state.like});//setState会自动调用render函数，触发视图的重新渲染，如果仅仅只是state数据的变化而没有调用setState，并不会触发更新
     }
     render(){
         const text = this.state.like?'Like':"Unlike";

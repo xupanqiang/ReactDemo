@@ -1,5 +1,7 @@
 /**
- * Created by 14566 on 2016/10/16.
+ * 创建人： XUPQ
+ * 时间： 2018-02-01 11:50
+ * 功能描述： 练习ES5和ES6
  */
 import React from 'react';
 import ReactDom from 'react-dom';
