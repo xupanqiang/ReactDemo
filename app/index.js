@@ -17,6 +17,12 @@ import Component9 from './components/Component9';
 import Component10 from './components/Component10';
 
 
+import CommentApp from './src/CommentApp'
+
+
+// import './css/index.css'
+
+
 ReactDom.render(
     <div>
         <Component1 /> {/*第一个 Hello World*/}
@@ -32,6 +38,9 @@ ReactDom.render(
         <Component8 /> {/*onChange事件，以及变量值的同步*/}
         <Component9 /> {/*定时任务事件的嵌入*/}
         {/*<Component10 source="https://api.github.com/users/octocat/gists"  /> /!*定时任务事件的嵌入*!/*/}
+
+        {/*实战*/}
+        <CommentApp />
     </div>,
     document.getElementById('app')
 );
