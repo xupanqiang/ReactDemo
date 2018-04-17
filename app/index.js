@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import ReactDom from 'react-dom';
+import Component0 from './components/Component0';
 import Component1 from './components/Component1';
 import Component2 from './components/Component2';
 import Component3 from './components/Component3';
@@ -17,7 +18,9 @@ import Component9 from './components/Component9';
 import Component10 from './components/Component10';
 
 
-import CommentApp from './src/CommentApp'
+import CommentApp from './src/comment/CommentApp'
+
+import LikeButton from './src/like/LikeButton'
 
 
 // import './css/index.css'
@@ -25,6 +28,7 @@ import CommentApp from './src/CommentApp'
 
 ReactDom.render(
     <div>
+        <Component0 />
         <Component1 /> {/*第一个 Hello World*/}
         <Component2 title="自定义组件" /> {/*自定义组件*/}
         <Component3 /> {/*数组遍历 map*/}
@@ -39,6 +43,8 @@ ReactDom.render(
         <Component9 /> {/*定时任务事件的嵌入*/}
         {/*<Component10 source="https://api.github.com/users/octocat/gists"  /> /!*定时任务事件的嵌入*!/*/}
 
+        {/*点赞*/}
+        <LikeButton />
         {/*实战*/}
         <CommentApp />
     </div>,
