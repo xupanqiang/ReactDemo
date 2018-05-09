@@ -5,6 +5,8 @@
  */
 import React from 'react';
 import ReactDom from 'react-dom';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 import Component0 from './components/Component0';
 import Component1 from './components/Component1';
 import Component2 from './components/Component2';
@@ -18,12 +20,20 @@ import Component9 from './components/Component9';
 import Component10 from './components/Component10';
 
 
-import CommentApp from './src/comment/CommentApp'
+import CommentApp from './src/containers/CommentApp'
+
+import commentsReducer from './src/reducers/comments'
 
 import LikeButton from './src/like/LikeButton'
 
 
-// import './css/index.css'
+import Date from './src/like/Date'
+
+
+
+// import './index.css'
+
+const store = createStore(commentsReducer)
 
 
 ReactDom.render(
@@ -46,7 +56,10 @@ ReactDom.render(
         {/*点赞*/}
         <LikeButton />
         {/*实战*/}
+        <Provider store={store}>
         <CommentApp />
+        </Provider>
+        {/*<Date />*/}
     </div>,
     document.getElementById('app')
 );
